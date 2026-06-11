@@ -48,9 +48,9 @@
 
 ### Prerequisites
 
-- Python 3.10+
-- Access to an LLM API (GPT-4.1, Claude 3.5 Sonnet, or Gemini 2.5 Pro) for judge replication
+- Python 3.10+ (standard library only — no additional packages required)
 - No Neo4j access required — all graph evidence is frozen in the verdicts JSON
+- **LLM API key is NOT required** for the main replication command below. An LLM API (GPT-4.1, Claude 3.5 Sonnet, or Gemini 2.5 Pro) is only needed if you want to re-run the judge scoring from scratch (see "Steps to Replicate Judge Scoring" below)
 
 ### Steps to Reproduce the 94.1% Result
 
