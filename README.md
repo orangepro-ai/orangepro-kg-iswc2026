@@ -117,6 +117,6 @@ Data: CC-BY-4.0 | Code: Apache-2.0
   booktitle={Proceedings of the International Semantic Web Conference (ISWC), Industry Track},
   year={2026},
   publisher={Springer},
-  doi={[Zenodo DOI]}
+  doi={10.5281/zenodo.20634981}
 }
 ```
