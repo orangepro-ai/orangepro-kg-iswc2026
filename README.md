@@ -8,10 +8,6 @@
 
 **Zenodo DOI:** [Will be added upon upload]
 
-**GitHub Repository:** https://github.com/aamir-siddiqui/orangepro-kg-iswc2026
-
----
-
 ## Package Contents
 
 ### /data/
