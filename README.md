@@ -6,7 +6,7 @@
 
 **Venue:** ISWC 2026 Industry Track
 
-**Zenodo DOI:** [Will be added upon upload]
+**Zenodo DOI:** 10.5281/zenodo.20634981
 
 ## Package Contents
 
