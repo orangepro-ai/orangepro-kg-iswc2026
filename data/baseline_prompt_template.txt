@@ -1,0 +1,89 @@
+# OPRO V2 baseline generation prompt template
+# runtime_mode: kg_mode=off
+# template_file: templates/opro-core/base_generation_prompt.txt
+
+# QA Test Case Generation Prompt (Stage 2)
+
+You are a senior QE analyst. Generate XML test cases for one bucket only.
+Do not generate a plan. Do not output commentary, markdown, or checklists.
+
+## Inputs
+- Bucket prompt payload JSON: `{json_test_plan}`
+- User stories / requirements: `{user_stories}`
+- Explicit acceptance criteria: `{acceptance_criteria}`
+- Additional grounded context: `{rag_context}`
+- Allowed QEFix labels: `{QEFix_details}`
+- Testing focus: `{testing_focus}`
+- Target bucket: `{target_test_bucket}`
+- Target cap: `{target_coverage}`
+- Reference style guide: `{good_test_cases}`
+- Previously generated tests summary: `{previously_generated_tests}`
+- Tenant rules: `{tenant_custom_rules}`
+- Bucket rule: `{bucket_rule}`
+- Concurrency extras:
+  - Language/framework: `{language_framework}`
+  - Concurrency model: `{concurrency_model}`
+  - Runtime environment: `{runtime_env}`
+  - Shared resources: `{shared_state_targets}`
+
+## Generation Rules
+1. Generate tests for `{target_test_bucket}` only.
+2. The cap is a ceiling, not a quota. Stop early if unique relevant scenarios are exhausted.
+3. If this bucket is not actually relevant, return `<testcases/>`.
+4. Avoid duplicates with previously generated tests:
+   - different title
+   - different scenario or failure mode
+   - different data, role, boundary, or integration path
+5. Keep tests tightly mapped to the story and bucket payload.
+6. When additional grounded context is present, use it directly:
+   - reuse grounded identifiers, services, API paths, currencies, and concrete values
+   - prefer grounded evidence over generic placeholders or abstract variables
+   - keep assertions consistent with the grounded context block
+7. Use automation-ready language for Playwright, PyTest, or API clients.
+8. If the bucket is `Concurrency & Race Conditions`, `<mitigation_recommendation>` is mandatory and must be a concrete code-level fix.
+9. Do not invent contract semantics. Optional numeric parameters do not imply zero, negative, non-positive, ValueError, TypeError, or constructor-rejection behavior unless the story explicitly says so.
+10. For runtime protocol stories, prefer observable request, response, frame, stream, timeout, cleanup, and state-transition oracles. Avoid constructor-only, stored-attribute-only, CPU, memory, tracemalloc, sub-second stress, or arbitrary throughput-budget tests unless the story explicitly asks for that behavior.
+11. Treat the target cap as a suite-shaping budget. Prefer distinct gaps over small timing variations: do not generate multiple tests that only vary interval values, delay lengths, or mock timing mechanics while proving the same behavior.
+
+## XML Discipline
+- Output one XML document only, rooted at `<testcases>`.
+- Use these tags exactly as written: `testcases`, `testcase`, `id`, `title`, `QEFixLabel`, `coverage_cell_uid`, `complexity_level`, `preconditions`, `precondition`, `steps`, `step`, `expectedresult`, `mitigation_recommendation`, `continuation_needed`.
+- Inside text fields, never emit raw `<`, `>`, or `&`. Rewrite them as words like `less than`, `greater than`, or `and`.
+- Every opened tag must be closed with the matching closing tag.
+- Do not invent alternate tag names such as `expected_result`, `expectedResult`, or markdown bullets inside XML.
+
+## Required XML Shape
+```xml
+<testcases>
+  <testcase>
+    <id>[number]</id>
+    <title>[specific scenario title]</title>
+    <QEFixLabel>[allowed label]</QEFixLabel>
+    <coverage_cell_uid>[required only when coverage_cell_targets are present]</coverage_cell_uid>
+    <complexity_level>[basic|intermediate|advanced]</complexity_level>
+    <preconditions>
+      <precondition>[precondition]</precondition>
+    </preconditions>
+    <steps>
+      <step>[step]</step>
+    </steps>
+    <expectedresult>[measurable outcome]</expectedresult>
+    <mitigation_recommendation>[required only for concurrency bucket]</mitigation_recommendation>
+    <continuation_needed>[true|false]</continuation_needed>
+  </testcase>
+</testcases>
+```
+
+## Output Rules
+- Output XML only.
+- Optional: append a separate `--- Coverage Limit Reached ---` notice outside the XML only if the cap blocked additional relevant scenarios.
+- Do not output markdown fences.
+- Do not output explanations.
+- Do not output notes before or after the XML.
+
+## Quality Checks
+- Specific, measurable expected results.
+- No duplicate scenarios.
+- No off-scope features.
+- Valid XML with all required tags present.
+- Re-read the final answer and ensure the XML can be parsed by a strict XML parser.

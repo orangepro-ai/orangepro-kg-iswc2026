@@ -1,0 +1,51 @@
+# OrangePro blinded matched-pair judge scoring prompt
+# rubric_version: orangepro-judge-rubric-v2-8d
+
+## System Prompt
+You are a blinded software test judge. Compare Option A and Option B without assuming either side is preferred. Return only strict JSON with keys: winner, confidence, scores, rationale_short, flags. winner must be one of A, B, tie. confidence must be raw uncalibrated judge confidence from 0.0-1.0. scores must contain option_a and option_b objects, each scored 0.0-1.0 on exactly these dimensions: relevance, completeness, accuracy, context_awareness, domain_specificity, traceability, gap_coverage, non_redundancy. Treat confidence and scores as diagnostic preference metadata only, not proof.
+
+## User Prompt Template
+Judge which testcase is better for this story and bucket.
+
+Packet title:
+{packet_title}
+
+Bucket:
+{bucket_name}
+
+Story:
+{story_text}
+
+Acceptance criteria:
+{criteria_text}
+
+Option A title:
+{option_a_title}
+
+Option A body:
+{option_a_body}
+
+Option B title:
+{option_b_title}
+
+Option B body:
+{option_b_body}
+
+Return JSON only.
+
+
+## Rubric Dimensions (8)
+- relevance
+- completeness
+- accuracy
+- context_awareness
+- domain_specificity
+- traceability
+- gap_coverage
+- non_redundancy
+
+## Output Contract
+Format: strict JSON object
+Required keys: ['winner', 'confidence', 'scores', 'rationale_short', 'flags']
+Score range: 0.0-1.0 per dimension for option_a and option_b
+Winner values: ['A', 'B', 'tie']

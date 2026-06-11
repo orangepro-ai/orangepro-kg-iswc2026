@@ -1,0 +1,52 @@
+{
+  "last_updated": "2026-04-11",
+  "measurement_source_commit": "af3c7af",
+  "baseline_type": "pre_phase_23_deterministic_grounding_floor",
+  "notes": [
+    "This file pins the current grounding-pack regression floor before Phase 23 shape-signature work starts.",
+    "These are deterministic branch-local measurements from scripts/eval_grounding_pack.py against local Neo4j data.",
+    "They are not provider-calibrated LLM judge numbers and must not be cited as such."
+  ],
+  "pinned": {
+    "beautyco-max-core": {
+      "top1_accuracy": {
+        "value": 1.0,
+        "tolerance": 0.0
+      },
+      "top3_accuracy": {
+        "value": 1.0,
+        "tolerance": 0.0
+      },
+      "service_recall": {
+        "value": 0.8333,
+        "tolerance": 0.0
+      },
+      "incident_recall": {
+        "value": 0.8333,
+        "tolerance": 0.0
+      },
+      "historical_test_recall": {
+        "value": 1.0,
+        "tolerance": 0.0
+      },
+      "avg_top1_confidence": {
+        "value": 1.0,
+        "tolerance": 0.01
+      }
+    },
+    "beautyco-max-broad": {
+      "top1_accuracy": {
+        "value": 1.0,
+        "tolerance": 0.0
+      },
+      "top3_accuracy": {
+        "value": 1.0,
+        "tolerance": 0.0
+      },
+      "avg_top1_confidence": {
+        "value": 0.9422,
+        "tolerance": 0.01
+      }
+    }
+  }
+}
