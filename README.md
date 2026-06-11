@@ -77,15 +77,16 @@ Expected output: `KG win rate: 48/51 = 94.12%`
 ---
 ## Note on LLM Stochasticity and Reproducibility
 
-LLM judges are stochastic by nature. Even with `temperature=0`, exact verdict replication is not guaranteed across model versions, API updates, or provider-side changes. **This is expected and by design.**
+LLM judges are stochastic by nature. Even with `temperature=0`, exact verdict replication is not guaranteed across model versions, API updates, or provider-side changes. This is expected and by design.
 
-The primary reproducibility claim of this paper is not "run the judge and get exactly 48/51" â it is: **the frozen verdict dataset is publicly available, SHA256-hashed, and independently verifiable.** The 94.1% figure is a fact about that specific frozen dataset, not a live benchmark.
+The primary reproducibility claim of this paper is not “run the judge and get exactly 48/51” — it is: the frozen verdict dataset is publicly available, SHA256-hashed, and independently verifiable. The 94.1% figure is a fact about that specific frozen dataset, not a live benchmark.
 
 The `reproduce_results.py` script reads the pre-computed verdicts directly from `verdicts_51pairs.json` without making any LLM API calls. This is the correct replication path.
 
-If you choose to re-run the judge scoring using `llm_judge.py`, treat it as a **methodology audit** â you are verifying that the rubric and prompt produce qualitatively similar preferences, not that you will recover exactly 48 wins. Minor variance (Â±2 pairs) is expected and acceptable given LLM stochasticity. The calibration artifact (`verdicts_calibration_24pairs.json`) provides a reference subset for this purpose.
+If you choose to re-run the judge scoring using `llm_judge.py`, treat it as a methodology audit — you are verifying that the rubric and prompt produce qualitatively similar preferences, not that you will recover exactly 48 wins. Minor variance (±2 pairs) is expected and acceptable given LLM stochasticity. The calibration artifact (`verdicts_calibration_24pairs.json`) provides a reference subset for this purpose.
 
 This approach follows established practice in LLM evaluation research, where frozen evaluation sets with cryptographic hashes serve as the reproducibility anchor.
+
 
 ---
 
