@@ -79,8 +79,18 @@ python scripts/generate_judge_prompt.py --input data/verdicts_calibration_24pair
 
 # For the full evaluation set (51 pairs):
 python scripts/generate_judge_prompt.py --input data/verdicts_51pairs.json --output judge_prompt.txt
+```
+
+**Step 2 — Paste into Claude or ChatGPT:**
+
+Open `judge_prompt.txt`, select all, copy, and paste into [claude.ai](https://claude.ai) or ChatGPT.
+
+**Step 3 — Check the verdicts:**
+
+The LLM will return a JSON array with one verdict per pair. Compare each `winner` field against the `consensus_winner` (calibration set) or `kg_won` (main set) values in the JSON. Agreement on ~22/24 or ~49/51 pairs confirms the judge is replicating correctly. Minor variance of ±2 pairs is expected due to LLM stochasticity.
 
 ---
+
 ## Note on LLM Stochasticity and Reproducibility
 
 LLM judges are stochastic by nature. Even with `temperature=0`, exact verdict replication is not guaranteed across model versions, API updates, or provider-side changes. This is expected and by design.
