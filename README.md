@@ -67,13 +67,19 @@ Expected output: `KG win rate: 48/51 = 94.12%`
 3. Compute: `win_rate = kg_preferred_count / total_pairs`
 4. Expected: 48/51 = 94.1%
 
-### Steps to Replicate Judge Scoring
+### Steps to Replicate Judge Scoring (Optional)
 
-1. Use the prompt in `data/judge_scoring_prompt.txt`
-2. For each pair in the verdicts JSON, submit both test cases (KG-grounded vs. baseline) to the LLM judge
-3. Score on 5 dimensions: relevance, completeness, atomicity, clarity, traceability
-4. Composite scores determine preference
+This is an optional methodology audit. It does not change the 94.1% result — that is already verified by `reproduce_results.py` above.
 
+**Step 1 — Generate the judge prompt:**
+
+```bash
+# For the calibration set (24 pairs — recommended starting point):
+python scripts/generate_judge_prompt.py --input data/verdicts_calibration_24pairs.json --output judge_prompt.txt
+
+# For the full evaluation set (51 pairs):
+python scripts/generate_judge_prompt.py --input data/verdicts_51pairs.json --output judge_prompt.txt
+``
 ---
 ## Note on LLM Stochasticity and Reproducibility
 
