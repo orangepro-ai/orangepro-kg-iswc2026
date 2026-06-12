@@ -73,13 +73,12 @@ This is an optional methodology audit. It does not change the 94.1% result — t
 
 **Step 1 — Generate the judge prompt:**
 
-```bash
 # For the calibration set (24 pairs — recommended starting point):
 python scripts/generate_judge_prompt.py --input data/verdicts_calibration_24pairs.json --output judge_prompt.txt
 
 # For the full evaluation set (51 pairs):
 python scripts/generate_judge_prompt.py --input data/verdicts_51pairs.json --output judge_prompt.txt
-``
+
 ---
 ## Note on LLM Stochasticity and Reproducibility
 
