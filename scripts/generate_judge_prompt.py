@@ -77,11 +77,16 @@ def build_prompt(pairs: list) -> str:
             lines.append("Acceptance criteria: (none provided)")
 
         lines.append("")
-        lines.append(f"Option A title: {str(v.get('option_a_title', '')).strip()}")
-        lines.append(f"Option A body:\n{str(v.get('option_a_body', '')).strip()}")
+        # Handle two field name schemas: calibration set uses option_a_body, main set uses option_a_test_body
+        a_title = v.get('option_a_title') or v.get('option_a_test_title', '')
+        a_body  = v.get('option_a_body')  or v.get('option_a_test_body', '')
+        b_title = v.get('option_b_title') or v.get('option_b_test_title', '')
+        b_body  = v.get('option_b_body')  or v.get('option_b_test_body', '')
+        lines.append(f"Option A title: {str(a_title).strip()}")
+        lines.append(f"Option A body:\n{str(a_body).strip()}")
         lines.append("")
-        lines.append(f"Option B title: {str(v.get('option_b_title', '')).strip()}")
-        lines.append(f"Option B body:\n{str(v.get('option_b_body', '')).strip()}")
+        lines.append(f"Option B title: {str(b_title).strip()}")
+        lines.append(f"Option B body:\n{str(b_body).strip()}")
         lines.append("")
 
     lines.append("=" * 80)
