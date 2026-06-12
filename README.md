@@ -31,6 +31,7 @@
 | File | Description |
 |------|-------------|
 | `reproduce_results.py` | Replication script: loads verdicts JSON and computes the 94.1% win rate |
+| `generate_judge_prompt.py` | Generates a ready-to-paste LLM judge prompt from any verdicts JSON file |
 | `llm_judge.py` | LLM judge service implementation |
 | `calibrate_judge.py` | Judge calibration script |
 
@@ -63,8 +64,8 @@ Expected output: `KG win rate: 48/51 = 94.12%`
 ### Manual Verification
 
 1. Load `data/verdicts_51pairs.json`
-2. For each pair, check `kg_preferred == true`
-3. Compute: `win_rate = kg_preferred_count / total_pairs`
+2. For each pair, check `kg_won == true`
+3. Compute: `win_rate = kg_wins / total_pairs`
 4. Expected: 48/51 = 94.1%
 
 ### Steps to Replicate Judge Scoring (Optional)
@@ -74,35 +75,38 @@ This is an optional methodology audit. It does not change the 94.1% result — t
 **Step 1 — Generate the judge prompt:**
 
 ```bash
-# For the calibration set (24 pairs — recommended starting point):
-python scripts/generate_judge_prompt.py --input data/verdicts_calibration_24pairs.json --output judge_prompt.txt
-
 # For the full evaluation set (51 pairs):
 python scripts/generate_judge_prompt.py --input data/verdicts_51pairs.json --output judge_prompt.txt
+
+# Or for the calibration set (24 pairs — faster starting point):
+python scripts/generate_judge_prompt.py --input data/verdicts_calibration_24pairs.json --output judge_prompt.txt
 ```
 
 **Step 2 — Paste into Claude or ChatGPT:**
 
-Open `judge_prompt.txt`, select all, copy, and paste into [claude.ai](https://claude.ai) or ChatGPT.
+Open `judge_prompt.txt`, select all, copy, and paste into [claude.ai](https://claude.ai) or ChatGPT. Save the JSON response Claude returns as `claude_verdicts.json`.
 
-**Step 3 — Check the verdicts:**
+**Step 3 — Score the results:**
 
-The LLM will return a JSON array with one verdict per pair. Compare each `winner` field against the `consensus_winner` (calibration set) or `kg_won` (main set) values in the JSON. Agreement on ~22/24 or ~49/51 pairs confirms the judge is replicating correctly. Minor variance of ±2 pairs is expected due to LLM stochasticity.
+```bash
+python scripts/score_claude_verdicts.py --claude claude_verdicts.json --reference data/verdicts_51pairs.json
+```
+
+This cross-references Claude's `winner` field with the `kg_side` mapping in the reference file and prints the KG win rate. Agreement of ~49/51 or higher confirms the judge is replicating correctly. Minor variance of ±2 pairs is expected due to LLM stochasticity.
 
 ---
 
 ## Note on LLM Stochasticity and Reproducibility
 
-LLM judges are stochastic by nature. Even with `temperature=0`, exact verdict replication is not guaranteed across model versions, API updates, or provider-side changes. This is expected and by design.
+LLM judges are stochastic by nature. Even with `temperature=0`, exact verdict replication is not guaranteed across model versions, API updates, or provider-side changes. **This is expected and by design.**
 
-The primary reproducibility claim of this paper is not “run the judge and get exactly 48/51” — it is: the frozen verdict dataset is publicly available, SHA256-hashed, and independently verifiable. The 94.1% figure is a fact about that specific frozen dataset, not a live benchmark.
+The primary reproducibility claim of this paper is not "run the judge and get exactly 48/51" — it is: **the frozen verdict dataset is publicly available, SHA256-hashed, and independently verifiable.** The 94.1% figure is a fact about that specific frozen dataset, not a live benchmark.
 
 The `reproduce_results.py` script reads the pre-computed verdicts directly from `verdicts_51pairs.json` without making any LLM API calls. This is the correct replication path.
 
-If you choose to re-run the judge scoring using `llm_judge.py`, treat it as a methodology audit — you are verifying that the rubric and prompt produce qualitatively similar preferences, not that you will recover exactly 48 wins. Minor variance (±2 pairs) is expected and acceptable given LLM stochasticity. The calibration artifact (`verdicts_calibration_24pairs.json`) provides a reference subset for this purpose.
+If you choose to re-run the judge scoring using `llm_judge.py`, treat it as a **methodology audit** — you are verifying that the rubric and prompt produce qualitatively similar preferences, not that you will recover exactly 48 wins. Minor variance (±2 pairs) is expected and acceptable given LLM stochasticity. The calibration artifact (`verdicts_calibration_24pairs.json`) provides a reference subset for this purpose.
 
 This approach follows established practice in LLM evaluation research, where frozen evaluation sets with cryptographic hashes serve as the reproducibility anchor.
-
 
 ---
 
