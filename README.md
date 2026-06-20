@@ -1,6 +1,6 @@
 # Reproducibility Package: Ontology-Governed Test Generation
 
-**Paper:** Ontology-Governed Test Generation: A Neo4j-Native Approach to Shape-Validated Knowledge Graphs for Enterprise QA
+**Paper:** Schema-Constrained Test Generation: A CQ-Driven Property Graph Approach to LLM Quality Assurance
 
 **Authors:** Aamir Siddiqui, Vaibhav Shrivastava, M. Bilal Ashfaq
 
